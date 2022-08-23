@@ -1,8 +1,36 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Alert,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function TodoItem({id, text, done, onToggle, onRemove}) {
+  const remove = () => {
+    Alert.alert(
+      '삭제',
+      '정말로 삭제하시겠습니까?',
+      [
+        {text: '취소', onPress: () => {}, style: 'cancel'},
+        {
+          text: '삭제',
+          onPress: () => {
+            onRemove(id);
+          },
+          style: 'destructive',
+        },
+      ],
+      {
+        cancelable: true,
+        onDismiss: () => {},
+      },
+    );
+  };
+
   return (
     <View style={styles.item}>
       <TouchableOpacity onPress={() => onToggle(id)}>
@@ -14,7 +42,7 @@ export default function TodoItem({id, text, done, onToggle, onRemove}) {
       </TouchableOpacity>
       <Text style={[styles.text, done && styles.lineThrough]}>{text}</Text>
       {done ? (
-        <TouchableOpacity onPress={() => onRemove(id)}>
+        <TouchableOpacity onPress={remove}>
           <Icon name="remove" size={32} color="red" />
         </TouchableOpacity>
       ) : (

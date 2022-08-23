@@ -1,6 +1,7 @@
 import {StyleSheet, KeyboardAvoidingView, Platform} from 'react-native';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
+import todosStorage from './storages/todosStorage';
 
 import DateHead from './components/DateHead';
 import Empty from './components/Empty';
@@ -27,6 +28,29 @@ export default function App() {
   ]);
 
   const today = new Date();
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        todosStorage.get().then(setTodos).catch(console.error);
+      } catch (error) {
+        console.error('Failed to load todos');
+      }
+    };
+    load();
+  }, []);
+
+  //저장하기
+  useEffect(() => {
+    const save = async () => {
+      try {
+        todosStorage.set(todos).catch(console.error);
+      } catch (error) {
+        console.log('Failed to save todos');
+      }
+    };
+    save();
+  }, [todos]);
 
   //추가하기
   const onInsert = text => {
